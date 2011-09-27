@@ -45,6 +45,10 @@ describe Mixpanel::Mail do
         nil => nil, 'anything' => 'anything'
       })
     end
+
+    it 'should recognize "campaign" option' do
+      mp_option_check('campaign', 'alt-campaign' => 'alt-campaign')
+    end
   end
 
   describe 'add tracking' do

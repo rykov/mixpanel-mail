@@ -12,8 +12,8 @@ module Mixpanel
   class Mail
     ENDPOINT = 'http://api.mixpanel.com/email'
     ENDPOINT_URI = URI.parse(ENDPOINT)
-    VALID_OPTIONS = %w(type properties redirect_host click_tracking)
-    
+    VALID_OPTIONS = %w(campaign type properties redirect_host click_tracking)
+
     attr_accessor :params
 
     def initialize(token, campaign, options = {})
