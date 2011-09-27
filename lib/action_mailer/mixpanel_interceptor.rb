@@ -10,6 +10,11 @@ module ActionMailer
     cattr_accessor :token
 
     class << self
+      def activate!(token)
+        self.token = token
+        ::ActionMailer::Base.register_interceptor(self)
+      end
+
       def delivering_email(mail)
         # Skip Mixpanel if the campaign is not specified
         return unless mail.header['mp_campaign']
