@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Michael Rykov"]
   s.email       = ["mrykov@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Helpers for Mixpanel Tracking in Emails}
+  s.description = %q{Helpers for Mixpanel Tracking in Emails}
 
   s.rubyforge_project = "mixpanel-mail"
 
