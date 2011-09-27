@@ -12,7 +12,7 @@ module Mixpanel
   class Mail
     ENDPOINT = 'http://api.mixpanel.com/email'
     ENDPOINT_URI = URI.parse(ENDPOINT)
-    VALID_OPTIONS = %w(campaign type properties redirect_host click_tracking)
+    OPTIONS = %w(campaign type properties redirect_host click_tracking)
 
     attr_accessor :params
 
@@ -43,7 +43,7 @@ module Mixpanel
       opts.stringify_keys!
 
       # Limit request to include only valid options
-      opts.slice!(*VALID_OPTIONS)
+      opts.slice!(*OPTIONS)
 
       # Default type is HTML, so we only allow TEXT
       opts.delete('type') unless opts['type'] == 'text'
