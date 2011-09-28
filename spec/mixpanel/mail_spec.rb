@@ -99,14 +99,15 @@ private
   end
 
   def verify_request_with_options(options = {}, expectations = {})
-    stub_post
-    mp_mail(options).add_tracking('my-dist-id', 'Hello World!')
-    mp_mail.add_tracking('my-dist-id', 'Hello World!', options)
-    a_post.with(:body => expectations.merge(
-      'token' => TOKEN,
-      'campaign' => CAMPAIGN,
-      'distinct_id' => 'my-dist-id',
-      'body' => 'Hello World!'
-    )).should have_been_made.twice
+    expectations = expectations.merge(
+     'token' => TOKEN,
+     'campaign' => CAMPAIGN,
+     'distinct_id' => 'my-dist-id',
+     'body' => 'Hello World!')
+
+    verify_mixpanel_requests(expectations, 2) do
+      mp_mail(options).add_tracking('my-dist-id', 'Hello World!')
+      mp_mail.add_tracking('my-dist-id', 'Hello World!', options)
+    end
   end
 end

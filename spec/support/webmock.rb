@@ -8,3 +8,10 @@
     stub_request(method, Mixpanel::Mail::ENDPOINT)
   end
 end
+
+# Allow to set expectations for a mixpanel request
+def verify_mixpanel_requests(body = {}, num = 1, &block)
+  stub_post
+  block && block.call
+  a_post.with(:body => body).should have_been_made.times(num)
+end
