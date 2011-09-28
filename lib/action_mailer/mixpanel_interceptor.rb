@@ -7,7 +7,8 @@ require 'digest/md5'
 
 module ActionMailer
   class MixpanelInterceptor
-    cattr_accessor :token
+    cattr_accessor :token, :logger
+    self.logger = Rails.logger if defined?(Rails)
 
     class << self
       def activate!(token)
@@ -16,20 +17,20 @@ module ActionMailer
       end
 
       def delivering_email(mail)
-        # Skip Mixpanel if the campaign is not specified
-        return unless mail.header['mp_campaign']
-
-        # Skip Mixpanel if we don't have HTML
-        html = mail.html_part ? mail.html_part.body : nil
-        return unless html.present?
-
-        # Convert header options to mixpanel options
+        # Remove all the Mixpanel headers from the email
         opts = ::Mixpanel::Mail::OPTIONS.inject({}) do |sum, key|
-          if value = pop_mp_header(mail, key)
-            sum[key] = value
+          if field = pop_mp_header(mail, key)
+            sum[key] = field.value
           end
           sum
         end
+
+        # Skip Mixpanel if the campaign is not specified
+        return unless opts['campaign']
+
+        # Skip Mixpanel if we don't have HTML
+        html = mail.html_part ? mail.html_part.decoded : nil
+        return unless html.present?
 
         # Generate email distinct_id for Mixpanel
         id = Digest::MD5.hexdigest(mail.header['To'].to_s)
@@ -37,14 +38,15 @@ module ActionMailer
         begin
           mail.html_part.body = mp_mail.add_tracking(id, html, opts)
         rescue => e
-          Rails.logger.warn("Failed to Mixpanelize Mail: #{e}")
           mail.html_part.body = html
+          logger.warn("Failed to Mixpanelize Mail: #{e}")
+          logger.debug(e.backtrace.join("\n"))
         end
       end
 
     private
       def mp_mail
-        @mixpanel_mail ||= Mixpanel::Mail.new(token, 'default')
+        @mixpanel_mail ||= Mixpanel::Mail.new(token)
       end
 
       def pop_mp_header(mail, key)

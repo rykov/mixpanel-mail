@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Mixpanel::Mail do
-  TOKEN, CAMPAIGN = 'abcd123', 'my-email'
+  TOKEN, CAMPAIGN = 'abcd123', Mixpanel::Mail::DEFAULT_CAMPAIGN
 
-  it 'should intialize token & campaign' do
+  it 'should intialize token & default campaign' do
     lambda {
       mail = mp_mail
       mail.params['token'].should eq(TOKEN)
@@ -88,7 +88,7 @@ describe Mixpanel::Mail do
 
 private
   def mp_mail(options = {})
-    ::Mixpanel::Mail.new(TOKEN, CAMPAIGN, options)
+    ::Mixpanel::Mail.new(TOKEN, options)
   end
 
   def mp_option_check(key, value_expectations = {})

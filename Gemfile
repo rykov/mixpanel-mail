@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 # Specify your gem's dependencies in mixpanel-mail.gemspec
 gemspec
@@ -10,4 +10,5 @@ gem 'rake'
 group :development do
   gem "rspec", "~> 2.6.0"
   gem "webmock", "~> 1.7.4"
+  gem 'actionmailer', '~> 3.1.0'
 end

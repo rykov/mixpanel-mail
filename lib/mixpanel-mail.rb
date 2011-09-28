@@ -13,13 +13,14 @@ module Mixpanel
     ENDPOINT = 'http://api.mixpanel.com/email'
     ENDPOINT_URI = URI.parse(ENDPOINT)
     OPTIONS = %w(campaign type properties redirect_host click_tracking)
+    DEFAULT_CAMPAIGN = 'default'
 
     attr_accessor :params
 
-    def initialize(token, campaign, options = {})
+    def initialize(token, options = {})
       @params = {}
       params['token'] = token
-      params['campaign'] = campaign
+      params['campaign'] = DEFAULT_CAMPAIGN
       params.merge!(groom_options(options))
     end
 
